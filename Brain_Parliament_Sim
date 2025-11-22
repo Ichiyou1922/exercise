@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-stress_level = float(input())
+
+stress_level = float(input("stress_level: ストレスレベルを0.0~1.0の間で"))
+environment_quality = float(input("environment_quolity: 環境が良ければ1.0より大きい値に"))
 
 class MindModule:
     def __init__(self, name, base_power, module_type):
@@ -9,7 +11,7 @@ class MindModule:
 
     def calculate_current_power(self, stress):
         if self.module_type == "rational":
-            current_power = self.base_power * (1.0 - stress)
+            current_power = self.base_power * (1.0 - stress) * environment_quality
 
         elif self.module_type == "instinct":
             current_power = self.base_power * (1.0 + stress)
