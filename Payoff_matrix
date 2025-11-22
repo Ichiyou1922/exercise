@@ -12,7 +12,18 @@ def play_round(player1_move, player2_move):
     player2_score = score[1]
     return player1_score, player2_score
 
-move1 = input("player1's choice: ")
-move2 = input("player2's choice: ")
+def strategy_always_defect():
+    return 'D'
 
-print(play_round(move1, move2))
+def strategy_always_cooperate():
+    return 'C'
+
+i = 1
+total_score_1 = 0
+total_score_2 = 0
+for i in range(100):
+    score = play_round(strategy_always_defect(), strategy_always_cooperate())
+    total_score_1 += score[0]
+    total_score_2 += score[1] # 善人の破滅を見よ
+
+print({total_score_1}, {total_score_2})
