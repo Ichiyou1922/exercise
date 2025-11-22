@@ -1,0 +1,18 @@
+#!/usr/bin/python3
+
+def play_round(player1_move, player2_move):
+    payoff_matrix = {
+            ('C', 'C'): (3, 3),
+            ('C', 'D'): (0, 5),
+            ('D', 'D'): (1, 1),
+            ('D', 'C'): (5, 0)
+                }
+    score = payoff_matrix[player1_move, player2_move]
+    player1_score = score[0]
+    player2_score = score[1]
+    return player1_score, player2_score
+
+move1 = input("player1's choice: ")
+move2 = input("player2's choice: ")
+
+print(play_round(move1, move2))
