@@ -1,0 +1,17 @@
+IMPORT math
+
+CLASS ROBOT:
+	DEF __init__(self):
+		self.x = 0
+		self.y = 0
+		self.battery = 10
+
+	DEF move(self, target_x, target_y): # add a self variable
+		d = math.sqrt((target_x - self.x)**2 + (target_y - self.y)**2)
+		IF self.battery < d: # battery->self.battery
+			PRINT("バッテリー不足です")
+		ELSE:
+			self.battery -= d 
+			self.x = target_x
+			self.y = target_y
+			PRINT("移動しました．残りバッテリー:" + str(self.battery)) # add strType

@@ -1,0 +1,6 @@
+CLASS KalmanFilter:
+	DEF update(self, pred_mean, pred_var, meas_mean, meas_var):
+		K = (pred_var) / (pred_var + meas_var)
+		new_mean = pred_mean + K * (meas_mean - pred_mean)
+		new_var = (1 - K) * pred_var
+		return [new_mean, new_var]

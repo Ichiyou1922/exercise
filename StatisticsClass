@@ -1,0 +1,17 @@
+Class Stats:
+	DEF get_mean(self, data):
+		N = len(data) # 値を保存しておきたいデータにのみself.をつける．
+		total = 0.0
+		FOR i IN data:
+			total += i
+			
+		mean_val = total / N
+		return mean
+
+	DEF get_variance(self, data, mean):
+		N = len(data)
+		varsum = 0.0
+		FOR k IN data:
+			varsum += (k - mean)**2
+		variance_val = varsum_val / N
+		return variance_val
