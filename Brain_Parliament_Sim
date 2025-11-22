@@ -1,0 +1,28 @@
+#!/usr/bin/python3
+stress_level = float(input())
+
+class MindModule:
+    def __init__(self, name, base_power, module_type):
+        self.name = name
+        self.base_power = base_power
+        self.module_type = module_type
+
+    def calculate_current_power(self, stress):
+        if self.module_type == "rational":
+            current_power = self.base_power * (1.0 - stress)
+
+        elif self.module_type == "instinct":
+            current_power = self.base_power * (1.0 + stress)
+        
+        return current_power
+
+Rational = MindModule("Rational", 1.0, "rational")
+Instinct = MindModule("Instinct", 1.0, "instinct")
+
+if Rational.calculate_current_power(stress_level) > Instinct.calculate_current_power(stress_level):
+    print("今日は頑張るぞ～")
+
+elif Rational.calculate_current_power(stress_level) < Instinct.calculate_current_power(stress_level):
+    print("今日しっかり休んだ方が明日のパフォーマンスイイでしょ")
+else:
+    print("まぁ鳥渡だけやるか")
