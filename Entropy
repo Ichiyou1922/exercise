@@ -1,0 +1,44 @@
+#!/bin/python3
+
+import matplotlib.pyplot as plt
+import math
+
+N_values = [10, 100, 1000]
+
+def calculate_W(N):
+    # k個が左の部屋にある場合の組み合わせ数 nCk
+    # log W を計算
+    # log(nCk) = log(n!) - log(k!) - log((n-k)!) 
+
+    k_list = range(N + 1)
+    ln_W_list = []
+
+    for k in k_list:
+        if N <= 100:
+            W = math.comb(N, k)
+            S = math.log(W)
+
+        else:
+            S = 0
+        
+        ln_W_list.append(S)
+    
+    return k_list, ln_W_list
+
+fig, ax = plt.subplots()
+for N in [10, 50, 100]:
+    x, y = calculate_W(N)
+    # x軸を割合(k/N)に正規化
+    x_norm = [k/N for k in x]
+    # y軸を最大値で正規化
+    y_max = max(y)
+    y_norm = [val/y_max for val in y]
+
+    ax.plot(x_norm, y_norm, label=f"N={N}")
+
+ax.set_xlabel('Ratio of particles in Left Room (k/N)')
+ax.set_ylabel('Normalized Entropy (S/S_max)')
+ax.set_title('Entropy Concentration')
+ax.legend()
+ax.grid(True)
+plt.show()
