@@ -1,0 +1,39 @@
+#!/usr/bin/python3
+
+def play_round(player1_move, player2_move):
+    payoff_matrix = {
+            ('C', 'C'): (3, 3),
+            ('C', 'D'): (0, 5),
+            ('D', 'D'): (1, 1),
+            ('D', 'C'): (5, 0)
+                }
+    score = payoff_matrix[player1_move, player2_move]
+    player1_score = score[0]
+    player2_score = score[1]
+    return player1_score, player2_score
+
+def strategy_tit_for_tat(opponent_last_move):
+    if opponent_last_move is None:
+        return 'C'
+    return opponent_last_move
+
+def strategy_always_defect():
+    return 'D'
+
+p1_last_move = None
+p2_last_move = None
+p1_score = 0
+p2_score = 0
+
+for i in range(100):
+    p1_action = strategy_tit_for_tat(p2_last_move)
+    p2_action = strategy_always_defect()
+
+    score = play_round(p1_action, p2_action)
+    p1_score += score[0]
+    p2_score += score[1]
+    
+    p1_last_move = p1_action
+    p2_last_move = p2_action
+
+print({p1_score}, {p2_score})
