@@ -1,0 +1,28 @@
+#!/usr/bin/python3
+
+def is_continuous(topology_x, topology_y, mapping_dict):
+    X = {frozenset(s) for s in topology_x}
+    Y = {frozenset(t) for t in topology_y}
+
+    for V in Y:
+        # dictの内Vに着地するようなxだけ取得->逆像
+        inverse = frozenset({x for x, y in mapping_dict.items() if y in V})
+        if inverse not in X:
+            return False
+
+    return True
+
+# 密着位相
+topo_x = [[], ['a', 'b']]
+
+# 離散位相
+topo_y = [[], [1], [2], [1, 2]]
+
+# 写像 f(a)=1, f(b)=2
+mapping_bad = {'a': 1, 'b': 2 }
+
+print(is_continuous(topo_x, topo_y, mapping_bad))
+
+mapping_const = {'a': 1, 'b': 1 }
+print(is_continuous(topo_x, topo_y, mapping_const))
+
