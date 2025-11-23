@@ -1,0 +1,66 @@
+#!/usr/bin/python3
+
+from typing import TypeVar, Generic, Callable, Union
+
+T = TypeVar('T')
+U = TypeVar('U')
+
+class Maybe(Generic[T]):
+    """
+    値を一つだけ持つかもしれないし、持たないかもしれないコンテナ。
+    圏論的には、対象 T を 対象 Maybe[T] に変換するもの。
+    """
+    def __init__(self, value: Union[T, None]):
+        self.value = value
+
+    def map(self, func: Callable[[T], U]) -> 'Maybe[U]':
+        """
+        関手の核となるメソッド。
+        射 f: T -> U を受け取り、射 F(f): Maybe[T] -> Maybe[U] に変換して適用する。
+        
+        ルール:
+        1. もし自分の value が None なら、結果も None の Maybe を返す。
+        2. もし値があるなら、その値に func を適用し、結果を包んだ新しい Maybe を返す。
+        """
+        if self.value is None:
+            return Maybe(None)
+        else:
+            return Maybe(func(self.value))
+
+    def bind(self, func: Callable[[T], 'Maybe[U]']) -> 'Maybe[U]':
+        """
+        モナドの核となるメソッド。
+        射 f: T -> Maybe[U] を受け取り、適用して箱を平坦化する。
+        
+        ルール:
+        1. 自分の value が None なら、Nothing を返す。
+        2. 値があるなら、func(self.value) を実行する。
+           (注意: func の戻り値はすでに Maybe なので、そのまま返せばよい。
+            map のように再度 Maybe で包む必要はない！)
+        """
+        if self.value is None:
+            return Maybe(None)
+        else:
+            return func(self.value)
+
+    def __repr__(self): 
+        if self.value is None:
+            return "Nothing"
+        return f"Just({self.value})"
+
+# --- テスト ---
+# 割り算関数
+def safe_half(x):
+    if x % 2 != 0:
+        return Maybe(None) # 奇数は割り切れないとする(Nothing)
+    return Maybe(x // 2)
+
+# チェーンの実験
+# 16 -> 半分(8) -> 半分(4) -> 半分(2) : 成功するはず
+val1 = Maybe(16).bind(safe_half).bind(safe_half).bind(safe_half)
+
+# 16 -> 半分(8) -> 半分(4) -> 半分(2) -> 半分(1) -> 半分(失敗!) : Nothingになるはず
+val2 = val1.bind(safe_half).bind(safe_half) 
+
+print(f"Chain 1: {val1}")
+print(f"Chain 2: {val2}")
