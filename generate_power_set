@@ -1,0 +1,19 @@
+#!/usr/bin/python3
+
+def generate_power_set(original_list):
+    list_of_lists = []
+    n = len(original_list)
+    # 部分集合はquantity桁の2進数で表現できる．
+    for i in range(1 << n):
+        temporary_list = []
+        for j in range(n): # range(i)からrange(n)に修正
+            if (i >> j) & 1:
+                temporary_list.append(original_list[j])
+        list_of_lists.append(temporary_list)
+
+    return list_of_lists
+
+example_set_list = str(input())
+
+result = generate_power_set(example_set_list)
+print(result)
