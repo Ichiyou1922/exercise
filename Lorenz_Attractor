@@ -1,0 +1,49 @@
+#!/usr/bin/python3
+import numpy as np
+import matplotlib.pyplot as plt
+
+def lorenz(state, t):
+    sigma = 10.0
+    rho = 28.0
+    beta = 8 / 3
+
+    x, y, z = state
+    
+    dxdt = sigma * (y - x)
+    dydt = x * (rho - z) - y
+    dzdt = x * y - beta * z
+
+    return [dxdt, dydt, dzdt]
+
+def rk4_step(func, state, t, dt):
+    state = np.array(state)
+    
+    k1 = np.array(func(state, t))
+    k2 = np.array(func(state + dt * k1 /2, t + dt / 2))
+    k3 = np.array(func(state + dt * k2 / 2, t + dt / 2))
+    k4 = np.array(func(state + dt * k3, t + dt))
+    
+    new_state = (state + dt * (k1 + 2 * k2 + 2 * k3 + k4) / 6)
+    return new_state.tolist()
+
+# メインループ
+dt = 0.01
+current_state = [1.0, 1.0, 1.0]
+trajectory = []
+steps = 5000
+current_time = 0.0
+
+for i in range(steps):
+    trajectory.append(current_state) 
+    next_state = rk4_step(lorenz, current_state, t, dt)
+    current_state = next_state
+    current_time += dt
+
+history = np.array(trajectory)
+
+# プロット
+fig = plt.figure()
+ax = fig.add_subplot(projection='3d')
+
+ax.plot(history[:, 0], history[:, 1], history[:, 2], lw=0.5)
+plt.show()
