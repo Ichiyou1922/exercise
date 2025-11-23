@@ -1,0 +1,38 @@
+#!/usr/bin/python3
+from typing import TypeVar, Callable, Any
+
+# 型変数の定義
+# ジェネリクス: 具体的な型に依存せず，抽象的な型そのものを変数として扱う技術．
+A = TypeVar('A')
+B = TypeVar('B')
+C = TypeVar('C')
+
+def compose(g: Callable[[B], C], f: Callable[[A], B]) -> Callable[[A], C]:
+    return lambda x: g(f(x))
+# def f(x: int) -> str:ならば，整数を受け取り文字列を返す
+def identity(x: A) -> A:
+    return x 
+
+# test
+
+# f: int -> str
+def f(x: int) -> str:
+    return str(x)
+
+# g: str -> list
+def g(x: str) -> list:
+    return [char for char in x]
+
+# h: list -> int
+def h(x: list) -> int:
+    return len(x)
+
+x = 123
+test1 = compose(compose(h, g), f)
+test2 = compose(h, compose(g, f))
+test3 = compose(f, identity)
+test4 = compose(identity, f)
+print(test1(x))
+print(test2(x))
+print(test3(x))
+print(test4(x))
