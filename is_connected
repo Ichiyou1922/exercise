@@ -1,0 +1,22 @@
+#!/usr/bin/python3
+
+def is_connected(whole_set, topology):
+    T = {frozenset(s) for s in topology}
+    for U in T:
+        if U == frozenset() or U == frozenset(whole_set):
+            continue
+        
+        V = frozenset(whole_set) - U
+        if V in T:
+            return False
+
+    return True
+
+X1 = {1, 2}
+T1 = [[], [1], [2], [1, 2]]
+print(is_connected(X1, T1))
+
+X2 = {1, 2}
+T2 = [[], [1, 2]]
+print(is_connected(X2, T2))
+        
