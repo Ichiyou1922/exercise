@@ -1,0 +1,18 @@
+#!/usr/bin/python3
+
+# 選ばれた集合族が位相かどうかチェックする関数
+def is_topology(whole_set, subset_family):
+    family_set = {frozenset(s) for s in subset_family}
+    # 空集合と全体集合が含まれているかのチェック
+    if frozenset() not in family_set or frozenset(whole_set) not in family_set:
+        return False 
+    
+    # 共通部分, 合併 の閉性チェック
+    for u in family_set:
+        for v in family_set:
+            if (u & v) not in family_set:
+                return False
+            
+            if (u | v) not in family_set:
+
+    return True

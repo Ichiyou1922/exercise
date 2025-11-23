@@ -1,0 +1,49 @@
+#!/usr/bin/python3
+
+def generate_power_set(original_list):
+    list_of_lists = []
+    n = len(original_list)
+    # 部分集合はquantity桁の2進数で表現できる．
+    for i in range(1 << n):
+        temporary_list = []
+        for j in range(n): # range(i)からrange(n)に修正
+            if (i >> j) & 1:
+                temporary_list.append(original_list[j])
+        list_of_lists.append(temporary_list)
+
+    return list_of_lists
+
+def is_topology(whole_set, subset_family):
+    family_set = {frozenset(s) for s in subset_family}
+    # 空集合と全体集合が含まれているかのチェック
+    if frozenset() not in family_set or frozenset(whole_set) not in family_set:
+        return False 
+    
+    # 共通部分, 合併 の閉性チェック
+    for u in family_set:
+        for v in family_set:
+            if (u & v) not in family_set:
+                return False
+            
+            if (u | v) not in family_set:
+                return False
+
+    return True
+
+S = {'x', 'y', 'z'}
+
+# Case 1: 密着位相 (Trivial Topology)
+# 最も荒い構造．「全」と「無」しか区別しない．
+topology_1 = [[], ['x', 'y', 'z']] 
+
+# Case 2: 離散位相 (Discrete Topology)
+# 最も細かい構造．すべての部分集合が開集合．
+topology_2 = generate_power_set(['x', 'y', 'z'])
+
+# Case 3: 位相ではない例
+# {x} と {y} はあるが，{x, y} がない．
+topology_3 = [[], ['x', 'y', 'z'], ['x'], ['y']]
+
+print(f"Case 1 (Trivial): {is_topology({'x', 'y', 'z'}, topology_1)}")
+print(f"Case 2 (Discrete): {is_topology({'x', 'y', 'z'}, topology_2)}")
+print(f"Case 3 (Not Topology): {is_topology({'x', 'y', 'z'}, topology_3)}")
