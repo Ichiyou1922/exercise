@@ -1,0 +1,47 @@
+#!/usr/bin/python3
+
+from typing import TypeVar, Generic, Callable, Union
+
+T = TypeVar('T')
+U = TypeVar('U')
+
+class Maybe(Generic[T]):
+    """
+    値を一つだけ持つかもしれないし、持たないかもしれないコンテナ。
+    圏論的には、対象 T を 対象 Maybe[T] に変換するもの。
+    """
+    def __init__(self, value: Union[T, None]):
+        self.value = value
+
+    def map(self, func: Callable[[T], U]) -> 'Maybe[U]':
+        """
+        関手の核となるメソッド。
+        射 f: T -> U を受け取り、射 F(f): Maybe[T] -> Maybe[U] に変換して適用する。
+        
+        ルール:
+        1. もし自分の value が None なら、結果も None の Maybe を返す。
+        2. もし値があるなら、その値に func を適用し、結果を包んだ新しい Maybe を返す。
+        """
+        if self.value is None:
+            return Maybe(None)
+        else:
+            return Maybe(func(self.value))
+
+    def __repr__(self): 
+        if self.value is None:
+            return "Nothing"
+        return f"Just({self.value})"
+
+# --- テスト ---
+# 1. 普通の値 (Just)
+num_box = Maybe(10)
+# 関数 f(x) = x * 2 を map で適用
+result1 = num_box.map(lambda x: x * 2) #まさに関数を受け渡している
+
+# 2. 空の値 (Nothing)
+empty_box = Maybe(None)
+# 同じ関数を適用 (エラーにならず、Nothingが返るべき)
+result2 = empty_box.map(lambda x: x * 2)
+
+print(f"Original: {num_box}, Mapped: {result1}")
+print(f"Original: {empty_box}, Mapped: {result2}")
